@@ -120,7 +120,7 @@
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .color-card {
@@ -143,7 +143,7 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .option-btn {
@@ -161,6 +161,29 @@
     .option-btn.selected {
       background: rgba(255, 0, 127, 0.35);
       border-color: #ff007f;
+    }
+
+    /* Custom Input Styling */
+    .custom-input-box {
+      display: none;
+      margin-top: 10px;
+      margin-bottom: 15px;
+    }
+
+    .custom-input-box input {
+      width: 100%;
+      padding: 11px 16px;
+      border-radius: 12px;
+      border: 1.5px solid #ffd700;
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .custom-input-box input::placeholder {
+      color: #bbb;
     }
 
     .btn-next {
@@ -184,21 +207,23 @@
       display: flex;
       justify-content: space-between;
       margin-bottom: 8px;
+      gap: 10px;
     }
 
-    .ticket-label { color: #ffd700; font-weight: 600; }
+    .ticket-label { color: #ffd700; font-weight: 600; white-space: nowrap; }
+    .ticket-val { text-align: right; word-break: break-word; }
   </style>
 </head>
 <body>
 
-  <!-- Audio: Navratri festive dhol / upbeat instrumental -->
+  <!-- Audio: Festive Dandiya Music -->
   <audio id="garbaMusic" loop preload="auto">
     <source src="https://assets.mixkit.co/music/preview/mixkit-bollywood-energetic-dance-992.mp3" type="audio/mpeg">
   </audio>
 
   <div class="card">
 
-    <!-- Screen 1: The Ask -->
+    <!-- Screen 1: The Question -->
     <div id="askScreen">
       <div class="emoji-banner">🪘 ✨ 💃</div>
       <h1>Hey Lavanya,</h1>
@@ -217,12 +242,16 @@
       <p class="subtitle">What color are we coordinating in?</p>
 
       <div class="color-grid">
-        <div class="color-card" style="background:#b3003b;" onclick="selectColor(this, 'Royal Maroon')">Maroon</div>
+        <div class="color-card selected" style="background:#b3003b;" onclick="selectColor(this, 'Royal Maroon')">Maroon</div>
         <div class="color-card" style="background:#d4af37; color:#111;" onclick="selectColor(this, 'Shimmering Gold')">Gold</div>
         <div class="color-card" style="background:#0047ab;" onclick="selectColor(this, 'Royal Blue')">Royal Blue</div>
         <div class="color-card" style="background:#006644;" onclick="selectColor(this, 'Emerald Green')">Emerald</div>
         <div class="color-card" style="background:#ff5e00;" onclick="selectColor(this, 'Rust Orange')">Orange</div>
-        <div class="color-card" style="background:#6a0dad;" onclick="selectColor(this, 'Deep Purple')">Purple</div>
+        <div class="color-card" style="background:rgba(255,255,255,0.15); border: 1px dashed #ffd700;" onclick="enableCustomColor(this)">✨ Other...</div>
+      </div>
+
+      <div class="custom-input-box" id="customColorBox">
+        <input type="text" id="customColorInput" placeholder="Type your preferred color..." oninput="updateCustomColor(this.value)">
       </div>
 
       <button class="btn-next" onclick="goToStep('stepVibe')">Next ➔</button>
@@ -235,9 +264,14 @@
       <p class="subtitle">What is your outfit aesthetic?</p>
 
       <div class="option-list">
-        <div class="option-btn" onclick="selectOption(this, 'Full Traditional Ghagra Choli & Kurta')">✨ Full Traditional (Ghagra Choli / Kurta)</div>
+        <div class="option-btn selected" onclick="selectOption(this, 'Full Traditional Chaniya Choli')">✨ Full Traditional (Chaniya Choli)</div>
         <div class="option-btn" onclick="selectOption(this, 'Indo-Western Fusion')">🕶️ Indo-Western Fusion</div>
         <div class="option-btn" onclick="selectOption(this, 'Comfort First (Sneakers + Kurti)')">👟 Sneaker Garba (Comfort First!)</div>
+        <div class="option-btn" onclick="enableCustomVibe(this)">✏️ Something else...</div>
+      </div>
+
+      <div class="custom-input-box" id="customVibeBox">
+        <input type="text" id="customVibeInput" placeholder="Describe your dream fit..." oninput="updateCustomVibe(this.value)">
       </div>
 
       <button class="btn-next" onclick="goToStep('stepFood')">Next ➔</button>
@@ -250,9 +284,14 @@
       <p class="subtitle">Midnight fuel after non-stop spins?</p>
 
       <div class="option-list">
-        <div class="option-btn" onclick="selectFood(this, 'Street Food & Late-Night Maggi')">🍜 Late-night roadside Maggi & Chai</div>
-        <div class="option-btn" onclick="selectFood(this, 'Ice Cream & Kulfi Drive')">🍦 Ice Cream / Kulfi drive</div>
-        <div class="option-btn" onclick="selectFood(this, 'Jalebi & Fafda Feast')">🥨 Hot Jalebi & Fafda</div>
+        <div class="option-btn selected" onclick="selectFood(this, 'Late-night roadside Maggi & Chai')">🍜 Late-night roadside Maggi & Chai</div>
+        <div class="option-btn" onclick="selectFood(this, 'Ice Cream / Kulfi drive')">🍦 Ice Cream / Kulfi drive</div>
+        <div class="option-btn" onclick="selectFood(this, 'Hot Jalebi & Fafda')">🥨 Hot Jalebi & Fafda</div>
+        <div class="option-btn" onclick="enableCustomFood(this)">✏️ Craving something else...</div>
+      </div>
+
+      <div class="custom-input-box" id="customFoodBox">
+        <input type="text" id="customFoodInput" placeholder="What are we eating?..." oninput="updateCustomFood(this.value)">
       </div>
 
       <button class="btn-next" onclick="showTicket()">Lock In Our Date! 🎟️</button>
@@ -265,10 +304,10 @@
       <p class="subtitle">Your Garba VIP Pass is confirmed.</p>
 
       <div class="ticket">
-        <div class="ticket-row"><span class="ticket-label">Partner:</span> <span>Lavanya ❤️</span></div>
-        <div class="ticket-row"><span class="ticket-label">Color Code:</span> <span id="summaryColor">Royal Maroon</span></div>
-        <div class="ticket-row"><span class="ticket-label">Style:</span> <span id="summaryVibe">Full Traditional</span></div>
-        <div class="ticket-row"><span class="ticket-label">After-Party:</span> <span id="summaryFood">Late-Night Maggi</span></div>
+        <div class="ticket-row"><span class="ticket-label">Partner:</span> <span class="ticket-val">Lavanya ❤️</span></div>
+        <div class="ticket-row"><span class="ticket-label">Color Code:</span> <span class="ticket-val" id="summaryColor">Royal Maroon</span></div>
+        <div class="ticket-row"><span class="ticket-label">Style:</span> <span class="ticket-val" id="summaryVibe">Full Traditional Chaniya Choli</span></div>
+        <div class="ticket-row"><span class="ticket-label">After-Party:</span> <span class="ticket-val" id="summaryFood">Late-night roadside Maggi & Chai</span></div>
       </div>
 
       <p style="font-size:0.85rem; color:#ffd700; margin-bottom:0;">Screenshot this and send it to me right now! 📸</p>
@@ -282,12 +321,11 @@
 
     let selections = {
       color: "Royal Maroon",
-      vibe: "Full Traditional",
+      vibe: "Full Traditional Chaniya Choli",
       food: "Late-night roadside Maggi & Chai"
     };
 
     function dodgeNo() {
-      // Moves button randomly away within container
       const offsetX = Math.floor(Math.random() * 180) - 90;
       const offsetY = Math.floor(Math.random() * 120) - 60;
       noBtn.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
@@ -319,30 +357,76 @@
     }
 
     function acceptInvite() {
-      // Start festive track
-      audio.play().catch(e => console.log("Audio autoplay prevented:", e));
+      audio.play().catch(e => console.log("Autoplay blocked:", e));
       triggerConfetti();
-
       document.getElementById('askScreen').style.display = 'none';
       document.getElementById('stepColor').classList.add('active');
     }
 
+    /* Color Handling */
     function selectColor(el, colorName) {
       document.querySelectorAll('.color-card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
+      document.getElementById('customColorBox').style.display = 'none';
       selections.color = colorName;
     }
 
+    function enableCustomColor(el) {
+      document.querySelectorAll('.color-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      const box = document.getElementById('customColorBox');
+      box.style.display = 'block';
+      const input = document.getElementById('customColorInput');
+      input.focus();
+      selections.color = input.value.trim() || "Custom Choice";
+    }
+
+    function updateCustomColor(val) {
+      selections.color = val.trim() || "Custom Choice";
+    }
+
+    /* Vibe Handling */
     function selectOption(el, vibeName) {
       document.querySelectorAll('#stepVibe .option-btn').forEach(b => b.classList.remove('selected'));
       el.classList.add('selected');
+      document.getElementById('customVibeBox').style.display = 'none';
       selections.vibe = vibeName;
     }
 
+    function enableCustomVibe(el) {
+      document.querySelectorAll('#stepVibe .option-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      const box = document.getElementById('customVibeBox');
+      box.style.display = 'block';
+      const input = document.getElementById('customVibeInput');
+      input.focus();
+      selections.vibe = input.value.trim() || "Custom Vibe";
+    }
+
+    function updateCustomVibe(val) {
+      selections.vibe = val.trim() || "Custom Vibe";
+    }
+
+    /* Food Handling */
     function selectFood(el, foodName) {
       document.querySelectorAll('#stepFood .option-btn').forEach(b => b.classList.remove('selected'));
       el.classList.add('selected');
+      document.getElementById('customFoodBox').style.display = 'none';
       selections.food = foodName;
+    }
+
+    function enableCustomFood(el) {
+      document.querySelectorAll('#stepFood .option-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      const box = document.getElementById('customFoodBox');
+      box.style.display = 'block';
+      const input = document.getElementById('customFoodInput');
+      input.focus();
+      selections.food = input.value.trim() || "Custom Snack";
+    }
+
+    function updateCustomFood(val) {
+      selections.food = val.trim() || "Custom Snack";
     }
 
     function goToStep(stepId) {
