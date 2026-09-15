@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Question for Lavanya ✨</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #3b0847 0%, #16001e 100%);
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      padding: 35px 25px;
+      border-radius: 28px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .emoji-banner {
+      font-size: 2.8rem;
+      margin-bottom: 12px;
+      animation: swing 2s infinite ease-in-out alternate;
+    }
+
+    @keyframes swing {
+      0% { transform: rotate(-8deg); }
+      100% { transform: rotate(8deg); }
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      color: #ffd700;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #e5d8ea;
+      font-size: 0.98rem;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    .btn-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      min-height: 70px;
+      position: relative;
+    }
+
+    button {
+      padding: 13px 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn-yes {
+      background: linear-gradient(45deg, #ff007f, #ffaa00);
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(255, 0, 127, 0.45);
+    }
+
+    .btn-yes:active { transform: scale(0.96); }
+
+    .btn-no {
+      background: rgba(255, 255, 255, 0.18);
+      color: #ccc;
+      position: absolute;
+      right: 35px;
+    }
+
+    /* Quiz Steps */
+    .step { display: none; text-align: left; }
+    .step.active { display: block; }
+    .step h2 {
+      font-size: 1.35rem;
+      color: #ffd700;
+      margin-bottom: 8px;
+      text-align: center;
+    }
+
+    .step p.subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .color-card {
+      padding: 12px 8px;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border: 2px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .color-card:hover, .color-card.selected {
+      border-color: #ffd700;
+      transform: translateY(-2px);
+    }
+
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .option-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: #fff;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+
+    .option-btn.selected {
+      background: rgba(255, 0, 127, 0.35);
+      border-color: #ff007f;
+    }
+
+    .btn-next {
+      width: 100%;
+      background: linear-gradient(45deg, #ff007f, #ffaa00);
+      color: white;
+      margin-top: 10px;
+    }
+
+    .ticket {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 0, 127, 0.15));
+      border: 2px dashed #ffd700;
+      border-radius: 18px;
+      padding: 18px;
+      margin: 15px 0;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .ticket-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .ticket-label { color: #ffd700; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <!-- Audio: Navratri festive dhol / upbeat instrumental -->
+  <audio id="garbaMusic" loop preload="auto">
+    <source src="https://assets.mixkit.co/music/preview/mixkit-bollywood-energetic-dance-992.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="card">
+
+    <!-- Screen 1: The Ask -->
+    <div id="askScreen">
+      <div class="emoji-banner">🪘 ✨ 💃</div>
+      <h1>Hey Lavanya,</h1>
+      <p>Navratri beats are warming up and the dandiya sticks won't spin themselves. Will you be my Garba partner?</p>
+
+      <div class="btn-wrap">
+        <button class="btn-yes" onclick="acceptInvite()">YES! 😍</button>
+        <button class="btn-no" id="noBtn" onmouseover="dodgeNo()" onclick="dodgeNo()">No 🙃</button>
+      </div>
+    </div>
+
+    <!-- Screen 2: Outfit Color -->
+    <div id="stepColor" class="step">
+      <div class="emoji-banner">👗 🎨 ✨</div>
+      <h2>Dandiya Prep: Step 1</h2>
+      <p class="subtitle">What color are we coordinating in?</p>
+
+      <div class="color-grid">
+        <div class="color-card" style="background:#b3003b;" onclick="selectColor(this, 'Royal Maroon')">Maroon</div>
+        <div class="color-card" style="background:#d4af37; color:#111;" onclick="selectColor(this, 'Shimmering Gold')">Gold</div>
+        <div class="color-card" style="background:#0047ab;" onclick="selectColor(this, 'Royal Blue')">Royal Blue</div>
+        <div class="color-card" style="background:#006644;" onclick="selectColor(this, 'Emerald Green')">Emerald</div>
+        <div class="color-card" style="background:#ff5e00;" onclick="selectColor(this, 'Rust Orange')">Orange</div>
+        <div class="color-card" style="background:#6a0dad;" onclick="selectColor(this, 'Deep Purple')">Purple</div>
+      </div>
+
+      <button class="btn-next" onclick="goToStep('stepVibe')">Next ➔</button>
+    </div>
+
+    <!-- Screen 3: Outfit Vibe -->
+    <div id="stepVibe" class="step">
+      <div class="emoji-banner">🪞 ✨ 🕺</div>
+      <h2>Dandiya Prep: Step 2</h2>
+      <p class="subtitle">What is your outfit aesthetic?</p>
+
+      <div class="option-list">
+        <div class="option-btn" onclick="selectOption(this, 'Full Traditional Ghagra Choli & Kurta')">✨ Full Traditional (Ghagra Choli / Kurta)</div>
+        <div class="option-btn" onclick="selectOption(this, 'Indo-Western Fusion')">🕶️ Indo-Western Fusion</div>
+        <div class="option-btn" onclick="selectOption(this, 'Comfort First (Sneakers + Kurti)')">👟 Sneaker Garba (Comfort First!)</div>
+      </div>
+
+      <button class="btn-next" onclick="goToStep('stepFood')">Next ➔</button>
+    </div>
+
+    <!-- Screen 4: Post-Garba Food -->
+    <div id="stepFood" class="step">
+      <div class="emoji-banner">🍜 ☕ 🌙</div>
+      <h2>Dandiya Prep: Step 3</h2>
+      <p class="subtitle">Midnight fuel after non-stop spins?</p>
+
+      <div class="option-list">
+        <div class="option-btn" onclick="selectFood(this, 'Street Food & Late-Night Maggi')">🍜 Late-night roadside Maggi & Chai</div>
+        <div class="option-btn" onclick="selectFood(this, 'Ice Cream & Kulfi Drive')">🍦 Ice Cream / Kulfi drive</div>
+        <div class="option-btn" onclick="selectFood(this, 'Jalebi & Fafda Feast')">🥨 Hot Jalebi & Fafda</div>
+      </div>
+
+      <button class="btn-next" onclick="showTicket()">Lock In Our Date! 🎟️</button>
+    </div>
+
+    <!-- Screen 5: Final Pass -->
+    <div id="finalScreen" class="step">
+      <div class="emoji-banner">🎉 💃🕺 ✨</div>
+      <h2 style="font-size:1.6rem;">It's Official!</h2>
+      <p class="subtitle">Your Garba VIP Pass is confirmed.</p>
+
+      <div class="ticket">
+        <div class="ticket-row"><span class="ticket-label">Partner:</span> <span>Lavanya ❤️</span></div>
+        <div class="ticket-row"><span class="ticket-label">Color Code:</span> <span id="summaryColor">Royal Maroon</span></div>
+        <div class="ticket-row"><span class="ticket-label">Style:</span> <span id="summaryVibe">Full Traditional</span></div>
+        <div class="ticket-row"><span class="ticket-label">After-Party:</span> <span id="summaryFood">Late-Night Maggi</span></div>
+      </div>
+
+      <p style="font-size:0.85rem; color:#ffd700; margin-bottom:0;">Screenshot this and send it to me right now! 📸</p>
+    </div>
+
+  </div>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+    const audio = document.getElementById('garbaMusic');
+
+    let selections = {
+      color: "Royal Maroon",
+      vibe: "Full Traditional",
+      food: "Late-night roadside Maggi & Chai"
+    };
+
+    function dodgeNo() {
+      // Moves button randomly away within container
+      const offsetX = Math.floor(Math.random() * 180) - 90;
+      const offsetY = Math.floor(Math.random() * 120) - 60;
+      noBtn.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    }
+
+    function triggerConfetti() {
+      const end = Date.now() + 1800;
+      const colors = ['#ffd700', '#ff007f', '#ffffff'];
+
+      (function frame() {
+        confetti({
+          particleCount: 4,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: colors
+        });
+        confetti({
+          particleCount: 4,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: colors
+        });
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+    }
+
+    function acceptInvite() {
+      // Start festive track
+      audio.play().catch(e => console.log("Audio autoplay prevented:", e));
+      triggerConfetti();
+
+      document.getElementById('askScreen').style.display = 'none';
+      document.getElementById('stepColor').classList.add('active');
+    }
+
+    function selectColor(el, colorName) {
+      document.querySelectorAll('.color-card').forEach(c => c.classList.remove('selected'));
+      el.classList.add('selected');
+      selections.color = colorName;
+    }
+
+    function selectOption(el, vibeName) {
+      document.querySelectorAll('#stepVibe .option-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      selections.vibe = vibeName;
+    }
+
+    function selectFood(el, foodName) {
+      document.querySelectorAll('#stepFood .option-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      selections.food = foodName;
+    }
+
+    function goToStep(stepId) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById(stepId).classList.add('active');
+    }
+
+    function showTicket() {
+      triggerConfetti();
+      document.getElementById('summaryColor').innerText = selections.color;
+      document.getElementById('summaryVibe').innerText = selections.vibe;
+      document.getElementById('summaryFood').innerText = selections.food;
+      goToStep('finalScreen');
+    }
+  </script>
+</body>
+</html>
