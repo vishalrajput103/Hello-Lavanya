@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>A Question for Dikshansha ✨</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Playfair+Display:ital,wght@1,600&display=swap" rel="stylesheet">
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #3b0847 0%, #16001e 100%);
+      font-family: 'Poppins', sans-serif;
+      color: #fff;
+      padding: 20px;
+      overflow-x: hidden;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 215, 0, 0.35);
+      padding: 35px 25px;
+      border-radius: 28px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+      max-width: 440px;
+      width: 100%;
+      text-align: center;
+      position: relative;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .emoji-banner {
+      font-size: 2.8rem;
+      margin-bottom: 12px;
+      animation: swing 2s infinite ease-in-out alternate;
+    }
+
+    @keyframes swing {
+      0% { transform: rotate(-8deg); }
+      100% { transform: rotate(8deg); }
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      color: #ffd700;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #e5d8ea;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 25px;
+    }
+
+    .btn-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 15px;
+      min-height: 70px;
+      position: relative;
+    }
+
+    button {
+      padding: 13px 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .btn-yes {
+      background: linear-gradient(45deg, #ff007f, #ffaa00);
+      color: #fff;
+      box-shadow: 0 4px 18px rgba(255, 0, 127, 0.45);
+    }
+
+    .btn-yes:active { transform: scale(0.96); }
+
+    .btn-no {
+      background: rgba(255, 255, 255, 0.18);
+      color: #ccc;
+      position: absolute;
+      right: 35px;
+    }
+
+    .step { display: none; text-align: left; }
+    .step.active { display: block; }
+    .step h2 {
+      font-size: 1.35rem;
+      color: #ffd700;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .step p.subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    /* Option buttons */
+    .option-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .option-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 12px 16px;
+      border-radius: 14px;
+      color: #fff;
+      text-align: left;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .option-btn.selected {
+      background: rgba(255, 0, 127, 0.35);
+      border-color: #ffd700;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+    }
+
+    /* Range slider container */
+    .slider-box {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(255, 215, 0, 0.2);
+      text-align: center;
+    }
+
+    input[type=range] {
+      width: 100%;
+      accent-color: #ff007f;
+      margin: 15px 0 10px 0;
+      cursor: pointer;
+    }
+
+    .range-label {
+      font-weight: 600;
+      color: #ffd700;
+      font-size: 1.05rem;
+    }
+
+    /* Custom input field */
+    .custom-input-box {
+      display: none;
+      margin-top: 10px;
+      margin-bottom: 15px;
+    }
+
+    .custom-input-box input {
+      width: 100%;
+      padding: 11px 16px;
+      border-radius: 12px;
+      border: 1.5px solid #ffd700;
+      background: rgba(0, 0, 0, 0.4);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .custom-input-box input::placeholder {
+      color: #bbb;
+    }
+
+    /* Date and time inputs */
+    .datetime-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .datetime-row input {
+      flex: 1;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1px solid #ffd700;
+      background: rgba(0,0,0,0.5);
+      color: #fff;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .btn-next {
+      width: 100%;
+      background: linear-gradient(45deg, #ff007f, #ffaa00);
+      color: white;
+      margin-top: 10px;
+    }
+
+    /* Boarding Pass */
+    .ticket {
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 0, 127, 0.15));
+      border: 2px dashed #ffd700;
+      border-radius: 18px;
+      padding: 18px;
+      margin: 15px 0;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .ticket-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      gap: 10px;
+    }
+
+    .ticket-label { color: #ffd700; font-weight: 600; white-space: nowrap; }
+    .ticket-val { text-align: right; word-break: break-word; }
+
+    #yt-player-container {
+      position: absolute;
+      top: -9999px;
+      left: -9999px;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Hidden YouTube Music Player (Kamariya) -->
+  <div id="yt-player-container">
+    <div id="player"></div>
+  </div>
+
+  <div class="card">
+
+    <!-- Screen 1: The Question -->
+    <div id="askScreen">
+      <div class="emoji-banner">🪘 ✨ 💃</div>
+      <h1>Hey Dikshansha,</h1>
+      <p>Navratri beats are warming up and the dandiya sticks won't spin themselves. Will you be my Garba partner?</p>
+
+      <div class="btn-wrap">
+        <button class="btn-yes" onclick="acceptInvite()">YES! 😍</button>
+        <button class="btn-no" id="noBtn" onmouseover="dodgeNo()" onclick="dodgeNo()">No 🙃</button>
+      </div>
+    </div>
+
+    <!-- Screen 2: Date & Time -->
+    <div id="stepDateTime" class="step">
+      <div class="emoji-banner">🗓️ ⏰ ✨</div>
+      <h2>Dandiya Prep: Step 1</h2>
+      <p class="subtitle">When are we hitting the ground?</p>
+
+      <p style="font-size:0.85rem; color:#ffd700; margin-bottom:6px;">Select specific date & start time:</p>
+      <div class="datetime-row">
+        <input type="date" id="datePicker" onchange="updateDateTime()">
+        <input type="time" id="timePicker" value="19:00" onchange="updateDateTime()">
+      </div>
+
+      <p style="font-size:0.85rem; color:#ffd700; margin-bottom:6px;">Or choose a vibe slot:</p>
+      <div class="option-list">
+        <div class="option-btn selected" onclick="selectTimeSlot(this, 'Sunset Entry (6:30 PM - Golden Hour)')">🌅 Sunset Entry (6:30 PM — Golden Hour clicks)</div>
+        <div class="option-btn" onclick="selectTimeSlot(this, 'Peak Energy Night (8:00 PM - Full Dhol)')">🥁 Prime Time (8:00 PM — Peak beats & dancing)</div>
+        <div class="option-btn" onclick="selectTimeSlot(this, 'Night Owl Special (9:30 PM - Midnight Maggi)')">🌙 Late Session (9:30 PM — Garba + Late Night Feasting)</div>
+      </div>
+
+      <button class="btn-next" onclick="goToStep('stepTravel')">Next ➔</button>
+    </div>
+
+    <!-- Screen 3: Travel Radius -->
+    <div id="stepTravel" class="step">
+      <div class="emoji-banner">🚗 📍 ✨</div>
+      <h2>Dandiya Prep: Step 2</h2>
+      <p class="subtitle">How far are we willing to travel for the best venue?</p>
+
+      <div class="slider-box">
+        <div class="range-label" id="travelRangeText">Local Hub (~5-10 km)</div>
+        <input type="range" id="distanceRange" min="1" max="4" value="2" oninput="handleSliderChange(this.value)">
+        <p id="sliderSubtext" style="font-size:0.82rem; color:#ddd; margin:0;">Nearby college grounds, local clubs or society arenas</p>
+      </div>
+
+      <div class="option-list">
+        <div class="option-btn" onclick="enableCustomTravel(this)">✏️ Have a specific spot in mind?</div>
+      </div>
+
+      <div class="custom-input-box" id="customTravelBox">
+        <input type="text" id="customTravelInput" placeholder="Name the place or location..." oninput="updateCustomTravel(this.value)">
+      </div>
+
+      <button class="btn-next" onclick="goToStep('stepFit')">Next ➔</button>
+    </div>
+
+    <!-- Screen 4: Outfit Vibe -->
+    <div id="stepFit" class="step">
+      <div class="emoji-banner">👗 🎨 ✨</div>
+      <h2>Dandiya Prep: Step 3</h2>
+      <p class="subtitle">Color & style coordination</p>
+
+      <div class="option-list">
+        <div class="option-btn selected" onclick="selectFit(this, 'Royal Maroon / Wine Red')">🍷 Royal Maroon / Wine Red</div>
+        <div class="option-btn" onclick="selectFit(this, 'Shimmering Gold & Mirror Work')">✨ Shimmering Gold & Mirror Work</div>
+        <div class="option-btn" onclick="selectFit(this, 'Royal Peacock Blue')">🦚 Royal Peacock Blue</div>
+        <div class="option-btn" onclick="selectFit(this, 'Emerald Forest Green')">🌿 Emerald Forest Green</div>
+        <div class="option-btn" onclick="enableCustomFit(this)">✏️ Pick another color / style...</div>
+      </div>
+
+      <div class="custom-input-box" id="customFitBox">
+        <input type="text" id="customFitInput" placeholder="Type your preferred color or style..." oninput="updateCustomFit(this.value)">
+      </div>
+
+      <button class="btn-next" onclick="showTicket()">Lock In Our Dandiya Pass! 🎟️</button>
+    </div>
+
+    <!-- Screen 5: Final Boarding Pass -->
+    <div id="finalScreen" class="step">
+      <div class="emoji-banner">🎉 💃🕺 ✨</div>
+      <h2 style="font-size:1.6rem;">It's Official!</h2>
+      <p class="subtitle">Dandiya VIP Pass is ready.</p>
+
+      <div class="ticket">
+        <div class="ticket-row"><span class="ticket-label">Partner:</span> <span class="ticket-val">Dikshansha ❤️</span></div>
+        <div class="ticket-row"><span class="ticket-label">Date & Time:</span> <span class="ticket-val" id="summaryDateTime">Sunset Entry</span></div>
+        <div class="ticket-row"><span class="ticket-label">Travel Zone:</span> <span class="ticket-val" id="summaryTravel">Local Hub (~5-10 km)</span></div>
+        <div class="ticket-row"><span class="ticket-label">Color Code:</span> <span class="ticket-val" id="summaryFit">Royal Maroon</span></div>
+      </div>
+
+      <p style="font-size:0.85rem; color:#ffd700; margin-bottom:0;">Take a screenshot and send it to me! 📸</p>
+    </div>
+
+  </div>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+
+    let player;
+    function onYouTubeIframeAPIReady() {
+      player = new YT.Player('player', {
+        height: '100',
+        width: '100',
+        videoId: 'i0_m90T04uw',
+        playerVars: {
+          'playsinline': 1,
+          'controls': 0,
+          'disablekb': 1,
+          'loop': 1,
+          'playlist': 'i0_m90T04uw'
+        }
+      });
+    }
+
+    let selections = {
+      dateTime: "Sunset Entry (6:30 PM)",
+      travel: "Local Hub (~5-10 km)",
+      fit: "Royal Maroon / Wine Red"
+    };
+
+    function dodgeNo() {
+      const offsetX = Math.floor(Math.random() * 180) - 90;
+      const offsetY = Math.floor(Math.random() * 120) - 60;
+      noBtn.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    }
+
+    function triggerConfetti() {
+      const end = Date.now() + 1800;
+      const colors = ['#ffd700', '#ff007f', '#ffffff'];
+
+      (function frame() {
+        confetti({
+          particleCount: 4,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: colors
+        });
+        confetti({
+          particleCount: 4,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: colors
+        });
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      }());
+    }
+
+    function acceptInvite() {
+      if (player && player.playVideo) {
+        player.playVideo();
+      }
+      triggerConfetti();
+      document.getElementById('askScreen').style.display = 'none';
+      document.getElementById('stepDateTime').classList.add('active');
+
+      // Set default date to upcoming weekend if empty
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('datePicker').value = today;
+    }
+
+    /* Date/Time Handling */
+    function updateDateTime() {
+      const d = document.getElementById('datePicker').value;
+      const t = document.getElementById('timePicker').value;
+      if (d && t) {
+        selections.dateTime = `${d} at ${t}`;
+        document.querySelectorAll('#stepDateTime .option-btn').forEach(b => b.classList.remove('selected'));
+      }
+    }
+
+    function selectTimeSlot(el, slot) {
+      document.querySelectorAll('#stepDateTime .option-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      const d = document.getElementById('datePicker').value;
+      selections.dateTime = d ? `${d} (${slot})` : slot;
+    }
+
+    /* Travel Radius Handling */
+    const travelOptions = {
+      1: { title: "Close by (< 5 km)", desc: "Within campus/local area, zero travel fatigue!" },
+      2: { title: "Local Hub (~5-10 km)", desc: "Nearby stadium, college grounds or society arena" },
+      3: { title: "Across Town (15-25 km)", desc: "The biggest mega-fest in the city, distance doesn't matter" },
+      4: { title: "Road Trip Mode (30+ km)", desc: "Anywhere for the best vibe & midnight food drive!" }
+    };
+
+    function handleSliderChange(val) {
+      document.getElementById('travelRangeText').innerText = travelOptions[val].title;
+      document.getElementById('sliderSubtext').innerText = travelOptions[val].desc;
+      selections.travel = travelOptions[val].title;
+      document.getElementById('customTravelBox').style.display = 'none';
+    }
+
+    function enableCustomTravel(el) {
+      const box = document.getElementById('customTravelBox');
+      box.style.display = 'block';
+      const input = document.getElementById('customTravelInput');
+      input.focus();
+      selections.travel = input.value.trim() || "Custom Destination";
+    }
+
+    function updateCustomTravel(val) {
+      selections.travel = val.trim() || "Custom Destination";
+    }
+
+    /* Outfit Fit Handling */
+    function selectFit(el, fitName) {
+      document.querySelectorAll('#stepFit .option-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      document.getElementById('customFitBox').style.display = 'none';
+      selections.fit = fitName;
+    }
+
+    function enableCustomFit(el) {
+      document.querySelectorAll('#stepFit .option-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+      const box = document.getElementById('customFitBox');
+      box.style.display = 'block';
+      const input = document.getElementById('customFitInput');
+      input.focus();
+      selections.fit = input.value.trim() || "Custom Choice";
+    }
+
+    function updateCustomFit(val) {
+      selections.fit = val.trim() || "Custom Choice";
+    }
+
+    function goToStep(stepId) {
+      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+      document.getElementById(stepId).classList.add('active');
+    }
+
+    function showTicket() {
+      triggerConfetti();
+      document.getElementById('summaryDateTime').innerText = selections.dateTime;
+      document.getElementById('summaryTravel').innerText = selections.travel;
+      document.getElementById('summaryFit').innerText = selections.fit;
+      goToStep('finalScreen');
+    }
+  </script>
+</body>
+</html>
