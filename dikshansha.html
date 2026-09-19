@@ -76,20 +76,21 @@
     }
 
     button {
-      padding: 13px 30px;
+      padding: 13px 26px;
       font-size: 1rem;
       font-weight: 600;
       border: none;
       border-radius: 50px;
       cursor: pointer;
       font-family: 'Poppins', sans-serif;
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
 
     .btn-yes {
       background: linear-gradient(45deg, #ff007f, #ffaa00);
       color: #fff;
       box-shadow: 0 4px 18px rgba(255, 0, 127, 0.45);
+      z-index: 2;
     }
 
     .btn-yes:active { transform: scale(0.96); }
@@ -97,8 +98,7 @@
     .btn-no {
       background: rgba(255, 255, 255, 0.18);
       color: #ccc;
-      position: absolute;
-      right: 35px;
+      transform-origin: center center;
     }
 
     .step { display: none; text-align: left; }
@@ -116,7 +116,6 @@
       margin-bottom: 20px;
     }
 
-    /* Option buttons */
     .option-list {
       display: flex;
       flex-direction: column;
@@ -142,7 +141,6 @@
       box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
     }
 
-    /* Range slider container */
     .slider-box {
       background: rgba(255, 255, 255, 0.08);
       padding: 20px;
@@ -165,7 +163,6 @@
       font-size: 1.05rem;
     }
 
-    /* Custom input field */
     .custom-input-box {
       display: none;
       margin-top: 10px;
@@ -188,7 +185,6 @@
       color: #bbb;
     }
 
-    /* Date and time inputs */
     .datetime-row {
       display: flex;
       gap: 10px;
@@ -214,7 +210,6 @@
       margin-top: 10px;
     }
 
-    /* Boarding Pass */
     .ticket {
       background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 0, 127, 0.15));
       border: 2px dashed #ffd700;
@@ -259,11 +254,11 @@
     <div id="askScreen">
       <div class="emoji-banner">🪘 ✨ 💃</div>
       <h1>Hey Dikshansha,</h1>
-      <p>Navratri beats are warming up and the dandiya sticks won't spin themselves. Will you be my Garba partner?</p>
+      <p id="questionSubtitle">Navratri beats are warming up and the dandiya sticks won't spin themselves. Will you be my Garba partner?</p>
 
       <div class="btn-wrap">
-        <button class="btn-yes" onclick="acceptInvite()">YES! 😍</button>
-        <button class="btn-no" id="noBtn" onmouseover="dodgeNo()" onclick="dodgeNo()">No 🙃</button>
+        <button class="btn-yes" id="yesBtn" onclick="acceptInvite()">YES! 😍</button>
+        <button class="btn-no" id="noBtn" onclick="handleNoTap()">No 🙃</button>
       </div>
     </div>
 
@@ -353,6 +348,10 @@
 
   <script>
     const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const subtitle = document.getElementById('questionSubtitle');
+
+    let noTapCount = 0;
 
     let player;
     function onYouTubeIframeAPIReady() {
@@ -376,10 +375,32 @@
       fit: "Royal Maroon / Wine Red"
     };
 
-    function dodgeNo() {
-      const offsetX = Math.floor(Math.random() * 180) - 90;
-      const offsetY = Math.floor(Math.random() * 120) - 60;
-      noBtn.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+    function handleNoTap() {
+      noTapCount++;
+
+      if (noTapCount === 1) {
+        // Tap 1: Shrink No to 75%, Grow Yes slightly
+        noBtn.style.transform = 'scale(0.75)';
+        noBtn.innerText = "Are you sure? 🥺";
+        yesBtn.style.transform = 'scale(1.15)';
+        subtitle.innerText = "Think again... the energy is gonna be unreal! ✨";
+      } else if (noTapCount === 2) {
+        // Tap 2: Shrink No to 50%, Grow Yes more
+        noBtn.style.transform = 'scale(0.5)';
+        noBtn.innerText = "Last chance... 🙈";
+        yesBtn.style.transform = 'scale(1.3)';
+        subtitle.innerText = "Wrong button! It's getting smaller for a reason 👀";
+      } else if (noTapCount >= 3) {
+        // Tap 3: Completely disappear
+        noBtn.style.transform = 'scale(0)';
+        noBtn.style.opacity = '0';
+        setTimeout(() => {
+          noBtn.style.display = 'none';
+        }, 250);
+
+        yesBtn.style.transform = 'scale(1.35)';
+        subtitle.innerText = "No wasn't an option anyway! 😉 Tap YES!";
+      }
     }
 
     function triggerConfetti() {
@@ -415,12 +436,10 @@
       document.getElementById('askScreen').style.display = 'none';
       document.getElementById('stepDateTime').classList.add('active');
 
-      // Set default date to upcoming weekend if empty
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('datePicker').value = today;
     }
 
-    /* Date/Time Handling */
     function updateDateTime() {
       const d = document.getElementById('datePicker').value;
       const t = document.getElementById('timePicker').value;
@@ -437,7 +456,6 @@
       selections.dateTime = d ? `${d} (${slot})` : slot;
     }
 
-    /* Travel Radius Handling */
     const travelOptions = {
       1: { title: "Close by (< 5 km)", desc: "Within campus/local area, zero travel fatigue!" },
       2: { title: "Local Hub (~5-10 km)", desc: "Nearby stadium, college grounds or society arena" },
@@ -464,7 +482,6 @@
       selections.travel = val.trim() || "Custom Destination";
     }
 
-    /* Outfit Fit Handling */
     function selectFit(el, fitName) {
       document.querySelectorAll('#stepFit .option-btn').forEach(b => b.classList.remove('selected'));
       el.classList.add('selected');
